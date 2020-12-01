@@ -1,0 +1,20 @@
+version: 2.1
+
+jobs:
+  allure:
+    docker:
+      - image: oretama/allure-cli:2.13.7-alpine
+    steps:
+      - checkout
+      - run: allure generate
+      - store_artifacts:
+          path: ./allure-report
+
+workflows:
+  allure-flow:
+    jobs:
+      - allure:
+          filters:
+            branches:
+              only:
+                - main
