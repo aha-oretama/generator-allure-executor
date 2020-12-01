@@ -62,4 +62,4 @@ function circleci() {
 }
 
 circleci
-printf "$JSON_FMT" "$name" "$type" "$url" "$buildOrder" "$buildName" "$buildUrl" "$reportName" "$reportUrl" > exector.json
+printf "$JSON_FMT" "$name" "$type" "$url" "$buildOrder" "$buildName" "$buildUrl" "$reportName" "$reportUrl" > executor.json

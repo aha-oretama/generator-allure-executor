@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run: |
           ./bin/generate-allure-executor.sh
-          mv -f exector.json ./allure-results/
+          mv -f executor.json ./allure-results/
           allure generate
       - store_artifacts:
           path: ./allure-report
