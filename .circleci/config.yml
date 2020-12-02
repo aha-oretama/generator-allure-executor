@@ -20,7 +20,8 @@ jobs:
           echo $artifacts
           echo "export ARTIFACT_URL=$artifacts" >> $BASH_ENV
       - run: |
-          ./bin/generate-allure-executor.sh
+          echo ${ARTIFACT_URL%%/index.html}
+          ./bin/generate-allure-executor.sh -R ${ARTIFACT_URL%%/index.html}
           mv -f executor.json ./allure-results/
           allure generate --clean
       - store_artifacts:
