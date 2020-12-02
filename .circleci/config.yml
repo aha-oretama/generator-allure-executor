@@ -17,10 +17,11 @@ jobs:
                 -H "Accept: application/json" \
                 -u "$CIRCLE_API_TOKEN:" | jq '.items[0].url')
           echo "export ARTIFACT_URL=$artifacts" >> $BASH_ENV
+          echo $ARTIFACT_URL
       - run: |
           ./bin/generate-allure-executor.sh
           mv -f executor.json ./allure-results/
-          allure generate
+          allure generate --clean
       - store_artifacts:
           path: ./allure-report
 
