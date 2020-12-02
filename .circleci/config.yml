@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Inject executor information
           command: |
-            ./bin/generate-allure-executor.sh -R ${ARTIFACT_URL%%/index.html}
+            ./bin/generate-allure-executor.sh -R ${ARTIFACT_URL}
             mv -f executor.json ./allure-results/
       - run:
           # https://circleci.com/docs/2.0/artifacts/#downloading-all-artifacts-for-a-build-on-circleci
