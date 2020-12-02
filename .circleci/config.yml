@@ -37,7 +37,7 @@ jobs:
             curl -H "Circle-Token: $CIRCLE_API_TOKEN" https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/$(expr ${CIRCLE_BUILD_NUM} - 1)/artifacts \
               | grep -o 'https://[^"]*' \
               | grep -e '/history/' \
-              | wget --verbose --header "Circle-Token: $CIRCLE_API_TOKEN" -P ./allure-results/history/ --input-file -
+              | wget --header "Circle-Token: $CIRCLE_API_TOKEN" -P ./allure-results/history/ --input-file -
       - run: allure generate --clean
       - store_artifacts:
           path: ./allure-report
