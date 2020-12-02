@@ -7,3 +7,4 @@ The allure-results is copied from [allure-demo](https://github.com/allure-framew
 
 test
 test
+test
