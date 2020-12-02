@@ -6,3 +6,4 @@ Require bash only.
 The allure-results is copied from [allure-demo](https://github.com/allure-framework/allure-demo).
 
 test
+test
