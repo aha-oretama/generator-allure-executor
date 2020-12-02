@@ -7,23 +7,38 @@ jobs:
     steps:
       - checkout
       - run: apk update && apk add --no-cache jq
+      # In CircleCI, the url of `store_artifacts` is dynamically changed.
+      # In order to get the url, we needs to upload once and get the url before generating executor.json
       - run: |
           mkdir ./allure-report
           echo 'empty html' > ./allure-report/index.html
       - store_artifacts:
           path: ./allure-report
-      - run: |
-          curl -X GET "https://circleci.com/api/v2/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}/artifacts"
-          artifacts=$(curl -X GET "https://circleci.com/api/v2/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}/artifacts" \
-                -H "Accept: application/json" \
-                -u "$CIRCLE_API_TOKEN:" | jq '.items[0].url')
-          echo $artifacts
-          echo "export ARTIFACT_URL=$artifacts" >> $BASH_ENV
-      - run: |
-          echo ${ARTIFACT_URL%%/index.html}
-          ./bin/generate-allure-executor.sh -R ${ARTIFACT_URL%%/index.html}
-          mv -f executor.json ./allure-results/
-          allure generate --clean
+      - run:
+          # https://support.circleci.com/hc/en-us/articles/360045457592-Access-uploaded-artifact-URL-in-job
+          name: Get uploaded artifact url
+          command: |
+            artifacts=$(curl -X GET "https://circleci.com/api/v2/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}/artifacts" \
+                  -H "Accept: application/json" \
+                  -u "$CIRCLE_API_TOKEN:" | jq '.items[0].url')
+            echo $artifacts
+            echo "export ARTIFACT_URL=$artifacts" >> $BASH_ENV
+      - run:
+          name: Inject executor information
+          command: |
+            ./bin/generate-allure-executor.sh -R ${ARTIFACT_URL%%/index.html}
+            mv -f executor.json ./allure-results/
+      - run:
+          # https://circleci.com/docs/2.0/artifacts/#downloading-all-artifacts-for-a-build-on-circleci
+          name: Download previous artifact
+          command: |
+            rm -Rf ./allure-results/history
+            mkdir -p ./allure-results/history
+            curl -H "Circle-Token: $CIRCLE_API_TOKEN" https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/$(expr ${CIRCLE_BUILD_NUM} - 1)/artifacts \
+              | grep -o 'https://[^"]*' \
+              | grep -e '/history/' \
+              | wget --verbose --header "Circle-Token: $CIRCLE_API_TOKEN" -P ./allure-results/history/ --input-file -
+      - run: allure generate --clean
       - store_artifacts:
           path: ./allure-report
 
