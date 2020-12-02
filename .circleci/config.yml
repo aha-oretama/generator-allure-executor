@@ -45,8 +45,4 @@ jobs:
 workflows:
   allure-flow:
     jobs:
-      - allure:
-          filters:
-            branches:
-              only:
-                - test-circleci
+      - allure
