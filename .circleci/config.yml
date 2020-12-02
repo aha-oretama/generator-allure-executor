@@ -13,11 +13,12 @@ jobs:
       - store_artifacts:
           path: ./allure-report
       - run: |
+          curl -X GET "https://circleci.com/api/v2/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}/artifacts
           artifacts=$(curl -X GET "https://circleci.com/api/v2/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}/artifacts" \
                 -H "Accept: application/json" \
                 -u "$CIRCLE_API_TOKEN:" | jq '.items[0].url')
+          echo $artifacts
           echo "export ARTIFACT_URL=$artifacts" >> $BASH_ENV
-          echo $ARTIFACT_URL
       - run: |
           ./bin/generate-allure-executor.sh
           mv -f executor.json ./allure-results/
