@@ -58,7 +58,7 @@ function circleci() {
   buildName="${BUILD_NAME:-$CIRCLE_JOB}"
   buildUrl="${BUILD_URL:-$CIRCLE_BUILD_URL}"
   reportName="${REPORT_NAME:-$CIRCLE_JOB report}"
-  reportUrl="${REPORT_NAME}"
+  reportUrl="${REPORT_URL}"
 }
 
 circleci
