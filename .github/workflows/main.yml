@@ -1,0 +1,36 @@
+name: allure
+
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  allure:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container:
+      image: oretama/allure-cli:2.13.7-alpine
+    steps:
+      - uses: actions/checkout@v2
+      # FIXME: GitHub actions doesn't support to download the previous artifacts. https://github.com/actions/download-artifact/issues/3
+      # So, it's impossible to generate history in allure now.
+      - run: |
+          ./bin/generate-allure-executor.sh -R 'http://localhost:9000'
+          mv -f executor.json ./allure-results/
+          allure generate --clean
+      - uses: actions/upload-artifact@v2
+        with:
+          name: allure-results
+          path: ./allure-results/
+      - uses: actions/upload-artifact@v2
+        with:
+          name: allure-report
+          path: ./allure-report/

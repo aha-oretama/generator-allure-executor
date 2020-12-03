@@ -7,8 +7,10 @@ cat <<EOT
 Usage:
   "$0" [-u url] [-o builOrder] [-b buildName] [-B buildUrl] [-r reportName] [-R reportUrl]
 Description:
-
-Environment variables are needed:
+  Generate allure's executor.json having executor's information.
+  Support for GitHub Actions, CircleCI.
+Output:
+  executor.json
 EOT
 
 exit 1
@@ -59,7 +61,7 @@ function verify_circleci() {
 
 function circleci() {
   if [ -z "${CIRCLE_JOB}"  ]; then
-    return 1
+    return 0
   fi
 
   verify_circleci
@@ -74,5 +76,30 @@ function circleci() {
   reportUrl="${REPORT_URL}"
 }
 
+function verify_github_actions() {
+  if [ -z "${REPORT_URL}" ]; then
+    err "reportUrl with -r option must be passed."
+    usage
+  fi
+}
+
+function github_actions() {
+  if [ -z "${GITHUB_ACTION}"  ]; then
+    return 0
+  fi
+
+  verify_github_actions
+
+  name="GitHub Actions"
+  type="github"
+  url="$URL"
+  buildOrder="${BUILD_ORDER:-$GITHUB_RUN_NUMBER}"
+  buildName="${BUILD_NAME:-$GITHUB_WORKFLOW}"
+  buildUrl="${BUILD_URL:-https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID}"
+  reportName="${REPORT_NAME:-$GITHUB_WORKFLOW report}"
+  reportUrl="${REPORT_URL}"
+}
+
 circleci
+github_actions
 printf "$JSON_FMT" "$name" "$type" "$url" "$buildOrder" "$buildName" "$buildUrl" "$reportName" "$reportUrl" > executor.json
