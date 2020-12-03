@@ -21,12 +21,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          pwd
-          echo '------ . --------'
-          ls .
-          echo '------ / --------'
-          ls /
-      - run: allure generate --clean
+          ./bin/generate-allure-executor.sh -R http://localhost:9000
+          mv -f executor.json ./allure-results/
+          allure generate --clean
+      - uses: actions/upload-artifact@v2
+        with:
+          name: allure-results
+          path: ./allure-results/
       - uses: actions/upload-artifact@v2
         with:
           name: allure-report
