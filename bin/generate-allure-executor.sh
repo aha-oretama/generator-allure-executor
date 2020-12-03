@@ -74,5 +74,20 @@ function circleci() {
   reportUrl="${REPORT_URL}"
 }
 
+function github_actions() {
+  if [ -z "${GITHUB_ACTION}"  ]; then
+    return 1
+  fi
+
+  name="GitHub Actions"
+  type="github"
+  url="$URL"
+  buildOrder="${BUILD_ORDER:-$GITHUB_RUN_NUMBER}"
+  buildName="${BUILD_NAME:-$GITHUB_WORKFLOW}"
+  buildUrl="${BUILD_URL:-https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID}"
+  reportName="${REPORT_NAME:-$GITHUB_WORKFLOW report}"
+  reportUrl="${REPORT_URL}"
+}
+
 circleci
 printf "$JSON_FMT" "$name" "$type" "$url" "$buildOrder" "$buildName" "$buildUrl" "$reportName" "$reportUrl" > executor.json
