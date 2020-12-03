@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 usage () {
 
@@ -59,7 +59,7 @@ function verify_circleci() {
 
 function circleci() {
   if [ -z "${CIRCLE_JOB}"  ]; then
-    return 1
+    return 0
   fi
 
   verify_circleci
@@ -83,7 +83,7 @@ function verify_github_actions() {
 
 function github_actions() {
   if [ -z "${GITHUB_ACTION}"  ]; then
-    return 1
+    return 0
   fi
 
   verify_github_actions
@@ -99,4 +99,5 @@ function github_actions() {
 }
 
 circleci
+github_actions
 printf "$JSON_FMT" "$name" "$type" "$url" "$buildOrder" "$buildName" "$buildUrl" "$reportName" "$reportUrl" > executor.json
