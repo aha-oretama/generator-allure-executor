@@ -46,10 +46,23 @@ done
 
 readonly JSON_FMT='{"name": "%s", "type": "%s", "url": "%s", "buildOrder": %d, "buildName": "%s", "buildUrl": "%s", "reportName": "%s", "reportUrl": "%s" }\n'
 
+function err() {
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
+}
+
+function verify_circleci() {
+  if [ -z "${REPORT_URL}" ]; then
+    err "reportUrl with -r option must be passed."
+    usage
+  fi
+}
+
 function circleci() {
   if [ -z "${CIRCLE_JOB}"  ]; then
     return 1
   fi
+
+  verify_circleci
 
   name="CircleCI"
   type="" # CircleCI icon is not provided
