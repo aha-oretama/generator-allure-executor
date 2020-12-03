@@ -20,7 +20,7 @@ jobs:
       image: oretama/allure-cli:2.13.7-alpine
     steps:
       - uses: actions/checkout@v2
-      # FIXME: GitHub actions doesn't support to download the previous artifacts.
+      # FIXME: GitHub actions doesn't support to download the previous artifacts. https://github.com/actions/download-artifact/issues/3
       # So, it's impossible to generate history in allure now.
       - run: |
           ./bin/generate-allure-executor.sh -R 'http://localhost:9000'
