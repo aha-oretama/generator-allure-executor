@@ -7,8 +7,10 @@ cat <<EOT
 Usage:
   "$0" [-u url] [-o builOrder] [-b buildName] [-B buildUrl] [-r reportName] [-R reportUrl]
 Description:
-
-Environment variables are needed:
+  Generate allure's executor.json having executor's information.
+  Support for GitHub Actions, CircleCI.
+Output:
+  executor.json
 EOT
 
 exit 1
