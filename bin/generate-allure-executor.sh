@@ -74,10 +74,19 @@ function circleci() {
   reportUrl="${REPORT_URL}"
 }
 
+function verify_github_actions() {
+  if [ -z "${REPORT_URL}" ]; then
+    err "reportUrl with -r option must be passed."
+    usage
+  fi
+}
+
 function github_actions() {
   if [ -z "${GITHUB_ACTION}"  ]; then
     return 1
   fi
+
+  verify_github_actions
 
   name="GitHub Actions"
   type="github"

@@ -21,7 +21,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
+          ls .
           ./bin/generate-allure-executor.sh -R http://localhost:9000
+      - run: |
           mv -f executor.json ./allure-results/
           allure generate --clean
       - uses: actions/upload-artifact@v2
